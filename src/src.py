@@ -6,6 +6,13 @@ CONF_FILE = os.path.join(os.path.dirname(CURRENT_DIR), "conf", "conf.ini")
 
 
 def create_env(path, name):
+    """
+    :param path: env location
+    :param name: env name
+    :return: None if success, Exception if failed
+
+    virtualenv [name]
+    """
     cmd = "cd " + path + "&& virtualenv " + name
     result = os.system(cmd)
     if result == 0:
@@ -16,7 +23,13 @@ def create_env(path, name):
 
 
 def setup_django(path, version):
+    """
+    :param path: env path
+    :param version: django version
+    :return: None if success, Exception if failed
 
+    pip install django==[version] -i https://pypi.douban.com/simple/
+    """
     pip_cmd = os.path.join(path, "bin", "pip ") + "install django==" + version + " -i https://pypi.douban.com/simple/"
     resp = os.system(pip_cmd)
     print resp
@@ -27,6 +40,15 @@ def setup_django(path, version):
 
 
 def create_django_project(path, project, app):
+    """
+    :param path: django file location
+    :param project: project name
+    :param app: app name
+    :return: None if success, Exception if failed
+
+    django-admin.py startproject [project]
+    python manage.py startapp [app]
+    """
     if not os.path.exists(path):
         os.makedirs(path)
     cmd = "cd " + path + "&& django-admin.py startproject " + project
