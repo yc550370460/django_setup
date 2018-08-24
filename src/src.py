@@ -39,9 +39,9 @@ def setup_django(path, version):
         raise Exception("Setup django failed, pip failed")
 
 
-def create_django_project(path, project, app):
+def create_django_project(path, dir, project, app):
     """
-    :param path: django file location
+    :param dir_path: django file location
     :param project: project name
     :param app: app name
     :return: None if success, Exception if failed
@@ -49,14 +49,15 @@ def create_django_project(path, project, app):
     django-admin.py startproject [project]
     python manage.py startapp [app]
     """
-    if not os.path.exists(path):
-        os.makedirs(path)
-    cmd = "cd " + path + "&& django-admin.py startproject " + project
+    dir_path = os.path.join(path, dir)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    cmd = "cd " + dir_path + "&&" + os.path.join(path, "bin", "django-admin.py") + " startproject " + project
     result = os.system(cmd)
     if result == 0:
         print "Create django project successfully"
-        path = path + "/" + project
-        cmd_app = "cd " + path + "&& python manage.py startapp " + app
+        _path = dir_path + "/" + project
+        cmd_app = "cd " + _path + " && " + os.path.join(path, "bin", "python") + " manage.py startapp " + app
         resp = os.system(cmd_app)
         if resp == 0:
             print "Create django app successfully"
@@ -91,7 +92,7 @@ if __name__ == "__main__":
             create_env(env_path, env_name)
             if django_status == "yes":
                 setup_django(os.path.join(env_path, env_name), django_version)
-                create_django_project(os.path.join(env_path, env_name, django_dir), django_project, django_app)
+                create_django_project(os.path.join(env_path, env_name), django_dir, django_project, django_app)
                 print "Create django project and app successfully"
             else:
                 if not os.path.exists(os.path.join(env_path, env_name, django_dir)):
