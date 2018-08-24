@@ -75,6 +75,7 @@ if __name__ == "__main__":
         try:
             env_path = ini.get("env", "path")
             env_name = ini.get("env", "name")
+            django_status = ini.get("django", "status")
             django_dir = ini.get("django", "dir")
             django_project = ini.get("django", "project")
             django_app = ini.get("django", "app")
@@ -88,9 +89,14 @@ if __name__ == "__main__":
             os.makedirs(env_path)
         try:
             create_env(env_path, env_name)
-            setup_django(os.path.join(env_path, env_name), django_version)
-            create_django_project(os.path.join(env_path, env_name, django_dir), django_project, django_app)
-            print "Create django project and app successfully"
+            if django_status == "yes":
+                setup_django(os.path.join(env_path, env_name), django_version)
+                create_django_project(os.path.join(env_path, env_name, django_dir), django_project, django_app)
+                print "Create django project and app successfully"
+            else:
+                if not os.path.exists(os.path.join(env_path, env_name, django_dir)):
+                    os.mkdir(os.path.join(env_path, env_name, django_dir))
+                print "Create non-django project successfully"
         except Exception, e:
             raise e
     else:
