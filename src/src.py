@@ -30,6 +30,7 @@ def setup_django(path, version):
 
     pip install django==[version] -i https://pypi.douban.com/simple/
     """
+    # if python3, use pip3 to replace pip
     pip_cmd = os.path.join(path, "bin", "pip ") + "install django==" + version + " -i https://pypi.douban.com/simple/"
     resp = os.system(pip_cmd)
     print resp
