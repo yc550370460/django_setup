@@ -5,7 +5,7 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 CONF_FILE = os.path.join(os.path.dirname(CURRENT_DIR), "conf", "conf.ini")
 
 
-def create_env(path, name):
+def create_env(path, name, python3):
     """
     :param path: env location
     :param name: env name
@@ -13,7 +13,11 @@ def create_env(path, name):
 
     virtualenv [name]
     """
-    cmd = "cd " + path + "&& virtualenv " + name
+    if create_env:
+        python3_path = "/Library/Frameworks/Python.framework/Versions/3.7/bin/python3"
+        cmd = "cd " + path + "&& virtualenv -p " + python3_path + " " + name
+    else:
+        cmd = "cd " + path + "&& virtualenv " + name
     result = os.system(cmd)
     if result == 0:
         print "Create env successfully"
@@ -82,6 +86,7 @@ if __name__ == "__main__":
             django_project = ini.get("django", "project")
             django_app = ini.get("django", "app")
             django_version = ini.get("django", "version")
+            python3 = True if ini.get("django", "python3") == "yes" else False
 
         except Exception, e:
             print e
@@ -90,7 +95,7 @@ if __name__ == "__main__":
         if not os.path.exists(env_path):
             os.makedirs(env_path)
         try:
-            create_env(env_path, env_name)
+            create_env(env_path, env_name, python3)
             if django_status == "yes":
                 setup_django(os.path.join(env_path, env_name), django_version)
                 create_django_project(os.path.join(env_path, env_name), django_dir, django_project, django_app)
